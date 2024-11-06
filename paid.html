@@ -16,13 +16,12 @@
         if (typeof FeexPay !== 'undefined') {
             FeexPay.init({
                 publicKey: 'fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe',  // Remplacez par votre clé de test
-                environment: 'live', // Ou 'production' une fois prêt
+                mode: 'LIVE', // Ou 'production' une fois prêt
             });
 
             document.getElementById("payButton").addEventListener("click", function() {
                 FeexPay.open({
-                    amount: 100, // Montant du paiement en centimes
-                    currency: 'EUR', // Devise
+                    amount: 100, // Montant du paiement en centimes 
                     order_id: 'order_12345', // ID unique de la commande
                     description: 'Description du produit',
                     successCallback: function(response) {
