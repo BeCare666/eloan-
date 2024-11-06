@@ -614,11 +614,11 @@ async function processPayment(amount) {
   // Exemple de configuration des headers pour l'API FeexPay
   const headers = new Headers({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe'
+      'Authorization': 'Bearer test_Hg7Kjl3ZAM63UuIUpuudD9nKuu3ZAM67Kjl3Uuhn'
   });
 
   // Requête API pour initier le paiement
-  const response = await fetch('https://api.feexpay.com/payments', {
+  const response = await fetch('https://sandbox.feexpay.com/payments', {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
