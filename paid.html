@@ -1,43 +1,119 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intégration FeexPay</title> 
-    <!-- Script FeexPay --> 
+    <title>Paid</title>
+    <script src="https://api.feexpay.me/feexpay-javascript-sdk/index.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.2/dist/sweetalert2.min.css">
+    <style>
+        /* Styles globaux pour le corps de la page */
+body {
+    margin: 0;
+    height: 100vh; /* Prend toute la hauteur de l'écran */
+    display: flex; /* Utilisation du modèle flexbox */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    font-family: Arial, sans-serif;
+}
+
+/* Styles spécifiques au div #render */
+#render {
+    padding: 20px;
+    background-color: #4CAF50; /* Couleur de fond de l'élément */
+    color: white; /* Couleur du texte */
+    border-radius: 8px; /* Bords arrondis */
+    text-align: center; /* Texte centré */
+    width: 80%; /* Largeur responsive */
+    max-width: 600px; /* Limite de la largeur maximale */
+}
+
+    </style>
 </head>
 <body>
-    <h1>Intégration FeexPay</h1>
-    <button id="payButton">Payer avec FeexPay</button>
-
-    <!-- Votre script d'application -->
+    <div id="render"></div>
     <script>
-        // Initialisation de FeexPay
-        if (typeof FeexPay !== 'undefined') {
-            FeexPay.init({
-                publicKey: 'fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe',  // Remplacez par votre clé de test
-                mode: 'LIVE', // Ou 'production' une fois prêt
-            });
+        const firebaseConfig = {
+  apiKey: "AIzaSyDbQjciXp0J_UGQBBcqmjlCAemYK-tsR6c",
+  authDomain: "am-wallet.firebaseapp.com",
+  databaseURL: "https://am-wallet-default-rtdb.firebaseio.com",  
+  projectId: "am-wallet", 
+  storageBucket: "am-wallet.appspot.com",
+  messagingSenderId: "877693231070",
+  appId: "1:877693231070:web:47c59ac6220ed09af9c74f"
+};
+const urlParams = new URLSearchParams(window.location.search);
+var amount = urlParams.get('amount_id');
 
-            document.getElementById("payButton").addEventListener("click", function() {
-                FeexPay.open({
-                    amount: 100, // Montant du paiement en centimes 
-                    order_id: 'order_12345', // ID unique de la commande
-                    description: 'Description du produit',
-                    successCallback: function(response) {
-                        alert('Paiement réussi !');
-                        console.log(response);
-                    },
-                    errorCallback: function(error) {
-                        alert('Une erreur est survenue : ' + error.message);
-                        console.log(error);
-                    }
-                });
-            });
-        } else {
-            console.error('Le SDK FeexPay n\'a pas été chargé correctement.');
+// Afficher la valeur récupérée
+if (amount) { 
+} else {
+ alert("Montant non disponible")
+} 
+const unserconnectId = localStorage.getItem("unserconnect")
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database(); 
+        FeexPayButton.init("render",{
+              id: "65c89373ac34723190f5087e",
+              amount: amount,
+              token: "fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe", 
+              mode:  'LIVE',
+              custom_button: false  , 
+              description: "AMWALETTE", 
+              callback: (status) => {               // Fonction callback pour gérer le statut de paiement
+            if (status === 'SUCCESSFUL') {
+        Swal.fire('Succès', 'Recharge réussie!', 'success');
+      const unserconnectuserIdE = localStorage.getItem("unserconnectuserId")
+      const balanceIDAWWW = localStorage.getItem('balanceIDAWWW')
+      var myComptaConvertis = parseFloat(balanceIDAWWW);
+      var addCommissionConvertis = parseFloat(inputValue)
+      var myCommissionAdd = myComptaConvertis + addCommissionConvertis
+      console.log('myComptaConvertis entered:', myComptaConvertis);
+      console.log('addCommissionConvertis entered:', addCommissionConvertis);
+      console.log('myCommissionAdd entered:', myCommissionAdd);
+      const newData = {
+        ACCOUNTPRINCIPAL: myCommissionAdd, 
+      };
+      const userRefx = database.ref(`/utilisateurs/${unserconnectuserIdE}`);
+      userRefx.update(newData, (error) => {
+        if (error){
+          Swal.fire({
+              title: "Ooops",
+              confirmButtonText: "OK",
+              allowOutsideClick: false,
+              text: "Your recharge  has failed.",
+              icon: 'error'
+              }).then((result)=>{
+              if(result.isConfirmed){
+                  window.location.reload(); 
+              }
+           })
+        }else{
+          Swal.fire({
+              icon: 'success',
+              title:"Succès",
+              confirmButtonText: "OK",
+              allowOutsideClick: true,
+              text : `Your recharge has been completed successfully.`,
+              }).then((result)=>{
+              if(result.isConfirmed){
+              window.location.href = `index.html`
+              }
+          })
+  
         }
+      }) 
+    } else if (status === 'FAILED ') {
+             Swal.fire('Erreur', 'Échec de la recharge : ' + data.message, 'error');
+                 } else {
+                  alert("Statut de paiement inconnu : " + status);
+             }
+    },
+  })
     </script>
-     <script src="https://api.feexpay.me/feexpay-javascript-sdk/index.js"></script>
 </body>
 </html>

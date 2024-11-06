@@ -608,55 +608,9 @@ Swal.fire({
        var inputValue = result.value;
        const  amount = inputValue *655
        //processPayment(amount);
+       window.location.href = `paid.html?amount_id=${amount}`
   }
-});
- 
-  if (data.success) {
-      Swal.fire('Succès', 'Recharge réussie!', 'success');
-      const unserconnectuserIdE = localStorage.getItem("unserconnectuserId")
-      const balanceIDAWWW = localStorage.getItem('balanceIDAWWW')
-      var myComptaConvertis = parseFloat(balanceIDAWWW);
-      var addCommissionConvertis = parseFloat(inputValue)
-      var myCommissionAdd = myComptaConvertis + addCommissionConvertis
-      console.log('myComptaConvertis entered:', myComptaConvertis);
-      console.log('addCommissionConvertis entered:', addCommissionConvertis);
-      console.log('myCommissionAdd entered:', myCommissionAdd);
-      const newData = {
-        ACCOUNTPRINCIPAL: myCommissionAdd, 
-      };
-      const userRefx = database.ref(`/utilisateurs/${unserconnectuserIdE}`);
-      userRefx.update(newData, (error) => {
-        if (error){
-          Swal.fire({
-              title: "Ooops",
-              confirmButtonText: "OK",
-              allowOutsideClick: false,
-              text: "Your recharge  has failed.",
-              icon: 'error'
-              }).then((result)=>{
-              if(result.isConfirmed){
-                  window.location.reload(); 
-              }
-           })
-        }else{
-          Swal.fire({
-              icon: 'success',
-              title:"Succès",
-              confirmButtonText: "OK",
-              allowOutsideClick: true,
-              text : `Your recharge has been completed successfully.`,
-              }).then((result)=>{
-              if(result.isConfirmed){
-              window.location.reload();
-              }
-          })
-  
-        }
-      }) 
-  } else {
-      Swal.fire('Erreur', 'Échec de la recharge : ' + data.message, 'error');
-  } 
-
+}); 
 
 })
 
