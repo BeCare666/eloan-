@@ -607,29 +607,10 @@ Swal.fire({
   if (result.isConfirmed) {
        var inputValue = result.value;
        const  amount = inputValue *655
-       processPayment(amount);
+       //processPayment(amount);
   }
 });
-async function processPayment(amount) {
-  // Exemple de configuration des headers pour l'API FeexPay
-  const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer test_Hg7Kjl3ZAM63UuIUpuudD9nKuu3ZAM67Kjl3Uuhn'
-  });
-
-  // Requête API pour initier le paiement
-  const response = await fetch('https://sandbox.feexpay.com/payments', {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-          amount: amount,
-          currency: 'EUR',  // Remplacez par la devise souhaitée
-          description: 'Recharge avec FeexPay'
-      })
-  });
-
-  const data = await response.json();
-
+ 
   if (data.success) {
       Swal.fire('Succès', 'Recharge réussie!', 'success');
       const unserconnectuserIdE = localStorage.getItem("unserconnectuserId")
@@ -674,8 +655,7 @@ async function processPayment(amount) {
       }) 
   } else {
       Swal.fire('Erreur', 'Échec de la recharge : ' + data.message, 'error');
-  }
-}
+  } 
 
 
 })

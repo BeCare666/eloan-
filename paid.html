@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intégration FeexPay</title> 
+    <!-- Script FeexPay --> 
+</head>
+<body>
+    <h1>Intégration FeexPay</h1>
+    <button id="payButton">Payer avec FeexPay</button>
+
+    <!-- Votre script d'application -->
+    <script>
+        // Initialisation de FeexPay
+        if (typeof FeexPay !== 'undefined') {
+            FeexPay.init({
+                publicKey: 'fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe',  // Remplacez par votre clé de test
+                environment: 'live', // Ou 'production' une fois prêt
+            });
+
+            document.getElementById("payButton").addEventListener("click", function() {
+                FeexPay.open({
+                    amount: 100, // Montant du paiement en centimes
+                    currency: 'EUR', // Devise
+                    order_id: 'order_12345', // ID unique de la commande
+                    description: 'Description du produit',
+                    successCallback: function(response) {
+                        alert('Paiement réussi !');
+                        console.log(response);
+                    },
+                    errorCallback: function(error) {
+                        alert('Une erreur est survenue : ' + error.message);
+                        console.log(error);
+                    }
+                });
+            });
+        } else {
+            console.error('Le SDK FeexPay n\'a pas été chargé correctement.');
+        }
+    </script>
+     <script src="https://api.feexpay.me/feexpay-javascript-sdk/index.js"></script>
+</body>
+</html>
