@@ -36,8 +36,8 @@ body {
 </head>
 <body>
     <div id="render"></div>
-    <script>
-        const firebaseConfig = {
+  <script>
+  const firebaseConfig = {
   apiKey: "AIzaSyDbQjciXp0J_UGQBBcqmjlCAemYK-tsR6c",
   authDomain: "am-wallet.firebaseapp.com",
   databaseURL: "https://am-wallet-default-rtdb.firebaseio.com",  
@@ -57,16 +57,20 @@ if (amount) {
 const unserconnectId = localStorage.getItem("unserconnect")
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database(); 
-        FeexPayButton.init("render",{
-              id: "65c89373ac34723190f5087e",
-              amount: amount,
-              token: "fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe", 
-              mode:  'LIVE',
-              custom_button: false  , 
-              description: "AMWALLET", 
-              callback: (status) => {               // Fonction callback pour gérer le statut de paiement
-            if (status === 'SUCCESSFUL') {
-        Swal.fire('Succès', 'Recharge réussie!', 'success');
+firebase.auth().onAuthStateChanged(function(user) { 
+if(user){
+var userId = user.uid;  
+      FeexPayButton.init("render",{
+      id: "65c89373ac34723190f5087e",
+      amount: amount,
+      token: "fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe", 
+      mode:  'LIVE',
+      custom_button: false  , 
+      description: "AMWALLET", 
+      callback: (status) => {  
+      console.log(status)
+      if (status === 'SUCCESSFUL') {
+      Swal.fire('Succès', 'Recharge réussie!', 'success');
       const unserconnectuserIdE = localStorage.getItem("unserconnectuserId")
       const balanceIDAWWW = localStorage.getItem('balanceIDAWWW')
       var myComptaConvertis = parseFloat(balanceIDAWWW);
@@ -78,7 +82,7 @@ const database = firebase.database();
       const newData = {
         ACCOUNTPRINCIPAL: myCommissionAdd, 
       };
-      const userRefx = database.ref(`/utilisateurs/${unserconnectuserIdE}`);
+      const userRefx = database.ref(`/utilisateurs/${userId}`);
       userRefx.update(newData, (error) => {
         if (error){
           Swal.fire({
@@ -114,6 +118,10 @@ const database = firebase.database();
              }
     },
   })
+}else{
+  window.location.href = "login.html"
+}
+})
     </script>
 </body>
 </html>
