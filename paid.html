@@ -48,7 +48,7 @@ body {
 };
 const urlParams = new URLSearchParams(window.location.search);
 var amount = urlParams.get('amount_id');
-
+var amountx = amount/655
 // Afficher la valeur récupérée
 if (amount) { 
 } else {
@@ -58,70 +58,76 @@ const unserconnectId = localStorage.getItem("unserconnect")
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database(); 
 firebase.auth().onAuthStateChanged(function(user) { 
-if(user){
-var userId = user.uid;  
-      FeexPayButton.init("render",{
+  if(user) {
+    var userId = user.uid;  
+    FeexPayButton.init("render", {
       id: "65c89373ac34723190f5087e",
       amount: amount,
       token: "fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe", 
-      mode:  'LIVE',
-      custom_button: false  , 
+      mode: 'LIVE',
+      custom_button: false, 
       description: "AMWALLET", 
       callback: (status) => {  
-      console.log(status)
-      if (status === 'SUCCESSFUL') {
-      Swal.fire('Succès', 'Recharge réussie!', 'success');
-      const unserconnectuserIdE = localStorage.getItem("unserconnectuserId")
-      const balanceIDAWWW = localStorage.getItem('balanceIDAWWW')
-      var myComptaConvertis = parseFloat(balanceIDAWWW);
-      var addCommissionConvertis = parseFloat(inputValue)
-      var myCommissionAdd = myComptaConvertis + addCommissionConvertis
-      console.log('myComptaConvertis entered:', myComptaConvertis);
-      console.log('addCommissionConvertis entered:', addCommissionConvertis);
-      console.log('myCommissionAdd entered:', myCommissionAdd);
-      const newData = {
-        ACCOUNTPRINCIPAL: myCommissionAdd, 
-      };
-      const userRefx = database.ref(`/utilisateurs/${userId}`);
-      userRefx.update(newData, (error) => {
-        if (error){
-          Swal.fire({
-              title: "Ooops",
-              confirmButtonText: "OK",
-              allowOutsideClick: false,
-              text: "Your recharge  has failed.",
-              icon: 'error'
-              }).then((result)=>{
-              if(result.isConfirmed){
+        var STATUS = status.status
+        if (STATUS === 'SUCCESSFUL') {
+          Swal.fire('Succès', 'Recharge réussie!', 'success');
+          
+          const unserconnectuserIdE = localStorage.getItem("unserconnectuserId");
+          const balanceIDAWWW = localStorage.getItem('balanceIDAWWW');
+          var myComptaConvertis = parseFloat(balanceIDAWWW);
+          var addCommissionConvertis = parseFloat(amountx);
+          var myCommissionAdd = myComptaConvertis + addCommissionConvertis;
+          
+          console.log('myComptaConvertis entered:', myComptaConvertis);
+          console.log('addCommissionConvertis entered:', addCommissionConvertis);
+          console.log('myCommissionAdd entered:', myCommissionAdd);
+          
+          const newData = {
+            ACCOUNTPRINCIPAL: myCommissionAdd
+          };
+          
+          const userRefx = database.ref(`/utilisateurs/${userId}`);
+          userRefx.update(newData, (error) => {
+            if (error) {
+              Swal.fire({
+                title: "Ooops",
+                confirmButtonText: "OK",
+                allowOutsideClick: false,
+                text: "Votre recharge a échoué.",
+                icon: 'error'
+              }).then((result) => {
+                if(result.isConfirmed) {
                   window.location.reload(); 
-              }
-           })
-        }else{
-          Swal.fire({
-              icon: 'success',
-              title:"Succès",
-              confirmButtonText: "OK",
-              allowOutsideClick: true,
-              text : `Your recharge has been completed successfully.`,
-              }).then((result)=>{
-              if(result.isConfirmed){
-              window.location.href = `index.html`
-              }
-          })
-  
+                }
+              });
+            } else {
+              Swal.fire({
+                icon: 'success',
+                title: "Succès",
+                confirmButtonText: "OK",
+                allowOutsideClick: true,
+                text: "Votre recharge a été effectuée avec succès."
+              }).then((result) => {
+                if(result.isConfirmed) {
+                  window.location.href = "index.html";
+                }
+              });
+            }
+          }); 
+        } else if (STATUS === 'FAILED') {
+          Swal.fire('Erreur', 'Échec de la recharge : ' + status.message, 'error');
+        } else {
+          alert("Statut de paiement inconnu : " + status);
         }
-      }) 
-    } else if (status === 'FAILED ') {
-             Swal.fire('Erreur', 'Échec de la recharge : ' + data.message, 'error');
-                 } else {
-                  alert("Statut de paiement inconnu : " + status);
-             }
-    },
-  })
-}else{
-  window.location.href = "login.html"
-}
-})
-    </script>
+      }
+    });
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+
+
+</script>
 </body>
 </html>
