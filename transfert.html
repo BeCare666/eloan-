@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paid</title>
+    <script src="https://api.feexpay.me/feexpay-javascript-sdk/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.2/dist/sweetalert2.min.css">
+    <style>
+        /* Styles globaux pour le corps de la page */
+body {
+    margin: 0;
+    height: 100vh; /* Prend toute la hauteur de l'écran */
+    display: flex; /* Utilisation du modèle flexbox */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    font-family: Arial, sans-serif;
+}
+
+/* Styles spécifiques au div #render */
+#render {
+    padding: 20px;
+    background-color: #4CAF50; /* Couleur de fond de l'élément */
+    color: white; /* Couleur du texte */
+    border-radius: 8px; /* Bords arrondis */
+    text-align: center; /* Texte centré */
+    width: 80%; /* Largeur responsive */
+    max-width: 600px; /* Limite de la largeur maximale */
+}
+
+    </style>
+</head>
+<body>
+    <div id="render"></div>
+<script>
+ 
+const urlParams = new URLSearchParams(window.location.search);
+var amount = urlParams.get('amount_id');
+var amountx = amount/655
+// Afficher la valeur récupérée
+if (amount) { 
+} else {
+ alert("Montant non disponible")
+} 
+const unserconnectId = localStorage.getItem("unserconnect")
+    FeexPayButton.init("render", {
+      id: "65c89373ac34723190f5087e",
+      amount: amount,
+      token: "fp_RyjzKSop3kh7DF1vy3LG0KRDTYYgF3ebSZSDsTR6MIrYauAU83IrSS7qUE3HksLe", 
+      mode: 'LIVE',
+      custom_button: false, 
+      description: "AMWALLET", 
+      callback: (status) => {  
+        var STATUS = status.status
+        if (STATUS === 'SUCCESSFUL') {
+            Swal.fire({
+                icon: 'success',
+                title: "Succès",
+                confirmButtonText: "OK",
+                allowOutsideClick: true,
+                text: "Votre recharge a été effectuée avec succès."
+              }).then((result) => {
+                if(result.isConfirmed) {
+                  window.location.href = "transfert.html";
+                }
+              });
+  
+        } else if (STATUS === 'FAILED') {
+          Swal.fire('Erreur', 'Échec de la recharge : ' + status.message, 'error');
+        } else {
+          alert("Statut de paiement inconnu : " + status);
+        }
+      }
+    });
+  
+
+
+
+</script>
+</body>
+</html>
